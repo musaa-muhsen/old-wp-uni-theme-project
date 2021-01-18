@@ -66,7 +66,7 @@ function pageBanner($args = NULL) {
 
 
 function university_files() {
-  wp_enqueue_script('googleMap','//maps.googleapis.com/maps/api/js?key=AIzaSyDPhz4-Lv0-qCoDFZ-SD32jVYADTxzJHVw' , NULL, '1.0', true); # to slashes are used instead of http or https(secure) so there will be no erros 
+  wp_enqueue_script('googleMap','//maps.googleapis.com/maps/api/js?key=' , NULL, '1.0', true); # to slashes are used instead of http or https(secure) so there will be no erros 
 
     wp_enqueue_script('main-university-js', get_theme_file_uri('/js/scripts-bundled.js'), NULL, microtime(), true); #true means at the bottom of the script, 1.0 just means the version, NULL there any dependencies 
     wp_enqueue_style('custom-google-fonts','//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i" rel="stylesheet' );
