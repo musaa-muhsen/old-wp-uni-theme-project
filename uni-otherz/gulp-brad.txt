@@ -1,0 +1,20 @@
+1) node --version 
+
+2) sudo npm install gulp-cli -g //to install
+
+3) gulp --version //to check 
+
+4) place the .json etc into the directory 
+
+5) sudo npm install
+
+6) [17:09:40] Using gulpfile ~/sites/fictional-university/gulpfile.js
+[17:09:40] Starting 'watch'...
+[Browsersync] Proxying: http://localhost:8888
+[Browsersync] Access URLs:
+ ----------------------------------------------------------
+       Local: http://localhost:3000/fictional-university
+    External: http://192.168.1.71:3000/fictional-university
+ ----------------------------------------------------------
+          UI: http://localhost:3001
+ UI External: http://localhost:3001

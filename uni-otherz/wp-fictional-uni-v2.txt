@@ -1,0 +1,173 @@
+1) wp dashboard by default only comes with 2 post types posts and pages. A page is actually just a post with a special post type of page
+paginate
+a post in the wp dashboard has = post.php?post=7&action=edit
+a page in the wp dashboard has = post.php?post=13&action=edit
+
+2)  mu-plugins aka "Must use plugins" location > wp-content >  mu-plugins
+instead of using functions.php and making a plugin . It's just a better ways of adding features 
+
+3) custom post type inside of mu-plugins.php
+
+function university_post_types() {
+    register_post_type('event' , array(
+         'has_archive' => true, #add archive
+       'public' => true, #make visible
+       'labels' => array(
+          'name' => 'Events', 
+          'add_new_item' => 'Add New Event',
+          'edit_item' => 'Edit Event',
+          'all_items' => 'All Events',
+          'singular_name' => 'Event!'
+
+
+       ),
+       #continued top level assiative array for adding icon 
+       'menu_icon' => 'dashicons-calendar'
+    ));
+}
+
+add_action('init', 'university_post_types');
+
+4)  front-page.php > WP_Query // same process as the blog except add post_type' => 'event'
+
+5) Permalink Settings need to re-saved to refresh the url for added event blog to show 
+
+6) create single-event.php for the single pages of this post type this example is single-event.php
+
+7) get_post_type_archive_link('event'); instead of site_url('/event')
+
+BESPOKE EXCERPT /////////////////////
+
+8) edit posts > show option (top) then input excerpt field .
+9) has_excerpt() // this function will only return a value of true if the current post has a hand-crafted excerpt.  
+
+10) echo get_the_excerpt(); will make it inline the_excerpt(); with all its features will make a get_post_type_archive_link
+
+11) wp_trim_words(get_the_content(), 18);
+
+CUSTOM FIELDS /////////////////////
+
+12) 2 industry stanard custom field plugins:  advanced custom fields (ACF) and cmb2 (custom metaboxes 2)
+   
+13) advanced custom fields has a built in features as part on plugin such as 'supports' get_field and the_field
+   "require yes" is important because whenever I create a new event post it will force me to select the date. 
+
+14) custome fields > locations is important change to the selected one 
+
+15) the_field('event_date') and get_field('event_date')
+
+16) $eventDate = new DateTime(); // this creates an object that is a represenation of the current date 
+
+17) ORDER CUSTOM QUERY BY CUSTOM FIELD VALUE///////////////////////
+
+ #same as return format on custom fields 
+       $today = date('Ymd');
+       $homepageEvents = new WP_Query(array (
+         # -1 is infinite???
+         'posts_per_page' => -1,
+         'post_type' => 'event', 
+         'meta_key' => 'event_date',
+         'orderby' => 'meta_value_num',
+         'order' => 'ASC',
+         #above changes the order of the date below gets rid of old events 
+         # type numeric comparing numbers 
+         'meta_query' => array(
+           array(
+             'key' => 'event_date',
+             'compare' => '>=',
+             'value' => $today,
+             'type' => 'numeric'
+           )
+         )
+
+       ));
+
+18) meta defination = : In computer science, a common prefix that means "about". So, for example, metadata is data that describes other data (data about data). A metalanguage is a language used to describe other languages. A metafile is a file that contains other files. The HTML META tag is used to describe the contents of a Web page.
+
+19) WP_Meta_Query is a class defined in wp-includes/meta.php that generates the necessary SQL for meta-related queries. It was introduced in Version 3.2.0 and greatly improved the possibility to query posts by custom fields. In the WP core, it's used in the WP_Query and WP_User_Query classes, and since Version 3.5 in the WP_Comment_Query class. Unless you're writing a custom SQL query, you should look in the *Custom Field Parameters* section for the corresponding class.
+
+20) you don't need to call wp_reset_postdata() for get_posts() because it does not actually modify global variable $wp_query.
+
+21) the bold part of the url is the slug 
+
+22) make new page page-past-events.php and paste in archive-event.php content
+
+23) remember  while(have_posts()) // keep looping as long as the following is true have posts and always start with the function named the_post() because that will get the appropriate data ready for each post
+
+
+24) is_page('past_events')
+
+25)  //paged value enables us to get the number that is up in the url bar, if we see the number two at the end of the URL, thats the number we want to use in our query, 
+       'paged' => get_query_var('paged', 1) , // this is saying go out and get that number at the end of the page url and if there isnt one to get the probably just means we're on the first page of results so therefore use number one. 
+       #syntax get_query_var(string $var required, optional mixed)
+
+       and for pagination 
+
+           echo paginate_links( array (
+        #The total amount of pages (configured above). Default is the value WP_Query's max_num_pages or 1
+        'total' => $pastEvents->max_num_pages
+        //
+
+    ));
+
+
+
+
+ 26) single-event.php does any events have any programs add it in  
+
+ $relatedPrograms = get_field('relted_programs'); contains an array
+
+
+        if ($relatedPrograms) {
+        echo '<ul class="link-list min-list">';
+        foreach($relatedPrograms as $program) { ?>
+          <li><a href="<?php echo get_the_permalink($program); ?>"> <?php  echo get_the_title($program); ?></a></li>
+       <?php  } 
+       echo '</ul>';
+        }
+
+27) single-program.php does any programs have any relationship with any events add it in.
+
+28) get_post_type_archive_link('program');
+
+29) wp_reset_postdata(); //important after using 1 custom query config
+
+30) filter to get like for like in wp_query 
+ 'key' => 'related_programs',
+             'compare' => 'LIKE',
+             'value' => '"' . get_the_ID() . '"'  #Retrieve the ID of the current item in the WordPress Loop
+
+Featured images //////////////////////////////////////////////////////
+
+31) functions.php > add_theme_support('post-thumbnails'); //aka featured images 
+
+32) add to mu-plugins > 'supports' => array('title' , 'editor', 'thumbnail'),
+
+33) the_post_thumbnail(); to where ever you want the feaured image/post-thumbnail 
+
+34) functions.php > add_image_size('professorLandscape', 400, 260, true); // (width,height,true) true if you wanted it cropped
+
+35) to call the function the_post_thumbnail('professorPortrait');
+
+36) used a plugin called "Manual Image Crop" to crop to use go to the post > featured image > Crop featured image
+
+37) also could be added to = add_image_size('professorLandscape', 400, 260, array('left', 'top'));
+
+38) for page banner on all pages when adding location make post type is equal to and is not equal to post 
+ also to make page banner add to functions.php > add_image_size('pageBanner', 1500, 350, true);
+
+39) old usage echo get_theme_file_uri('/images/ocean.jpg')
+
+important!!!!! 
+40) use print_r($var) as much as possible and when using plugin look at documenation 
+
+41) // sizes is a property of plugin and inside of that call the function inside of functions.php
+
+ $pageBannerImage['sizes']['pageBanner] // old $pageBannerImage['url']
+
+
+42) so i dont lose it = the_field('page_banner_subtitle_') 
+
+also 
+
+ $pageBannerImage = get_field('page_banner_background_image_'); echo $pageBannerImage['sizes']['pageBanner']

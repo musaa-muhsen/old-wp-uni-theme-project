@@ -1,0 +1,45 @@
+
+1) make a new directory and make a new file 
+2) /*
+Plugin Name: My first amazing Plugin
+Description: This plugin will change you life
+   */
+
+3) go into the admin dashboard and activate the plugin 
+
+RESEARCH
+4)  add_menu_page();
+    add_option();
+    get_option();
+    update_option();
+    delete_option();
+
+5) <?php 
+/*
+Plugin Name: My first amazing Plugin
+Description: This plugin will change you life
+*/
+
+add_filter('the_content', 'amazingContentEdits');
+
+function amazingContentEdits($contentArgs) {
+   $content = $contentArgs . '<p>All content belongs to Fictional University</p>';
+   $content = str_replace('Lorem', '*****' , $content); // 3rd arg is the overall string of text that you are filtering 
+   return $content;
+}
+
+add_shortcode('programCount', 'programCountFunc');
+
+function programCountFunc() {
+    $count_posts = wp_count_posts('program')->publish;
+    return $count_posts;
+    // To get the published status type, you would call the wp_count_posts() function and then access the ‘publish’ property.
+
+}
+
+
+// add shortcode like this [programCount] in posts then in the plugin file add add_shortcode( string $tag, callable $callback )
+//This filter is used to filter the content of a post after it is retrieved from the database and before it is printed to the screen.
+// the code we wrote in out plguin is just filtering the output of the wp function the content 
+// wp can be customized through events and filter hooks 
+// the idea with a plug in is that it's a separate sharable file or folder with a focused purpose. 

@@ -1,0 +1,256 @@
+1) bloginfo('name'); // Settings > General > Site Title	
+2) bloginfo('description'); // Settings > General > Tagline 
+
+3) while (condition) {
+    task
+    incrementation++
+}  
+
+//While loops is what WP uses for such things like posts and pages. 
+
+4) the famous WP loop
+while(have_posts()) {
+
+}
+//condition to see if there is any posts
+// even if there is only one post still use the while loop 
+
+5) the_post(); // gets the posts 
+
+6) the_title(); // gets the title within the posts 
+
+7) the_permalink(); // as in permanant link aka url 
+
+8) single.php // for single posts content 
+
+9) page.php // powers single pages 
+
+10) make global footer.php and header.php then add get_footer.php and get_header.php to relevant pages
+11) wp_head(); // so this function lets wordpress have the final say and load whatever it need to load in out head sectin of html 
+
+12) functions.php //behind the scenes files talk to wordpress/configs it 
+
+13 inside of functions.php > 
+
+ function FuncName() {
+    wp_enqueue_style('anyNickname', get_stylesheet_uri());// add style sheet 
+}
+
+add_action('wp_enqueue_scripts', 'FuncName');
+
+14) add_action syntax = add_action( string $tag, callable $function_to_add, int $priority = 10, int $accepted_args = 1 )
+
+15) wp_head adds files from functions.php looking for mainly css scripts 
+
+16) wp_footer acts like scripts in javascripts, but it does actually add scripts from javascript and the WP admin bar 
+
+17) echo get_theme_file_uri('/images/library-hero.jpg') // "get_theme_file_uri" cuts out the url to the theme file then take it from there, can be used anywhere 
+
+18) wp_enqueue_script('main-university-js', get_theme_file_uri('/js/scripts-bundled.js'), NULL, '1.0', true); NULL does'nt depend onany other js/css files to work
+
+19) change version '1.0' to microtime() ONLY for development 
+
+20) Developer tools > Network > Disable cache // is'nt good to use 
+
+21) the_title(); used this time for page.php titles inside the H1  
+
+22) the_content(); // Display the post content.
+
+23) How to change website title = inside of functions.php > 
+
+function funcName() {
+    add_theme_support('title-tag');
+}
+
+add_action('after_setup_theme', 'funcName');
+
+24) site_url('/about-us') //a way of adding links its is absolute not relative
+
+25) site_url() // link to home url 
+
+26) changing parent and children pages on the page attributes on the right of a new page
+
+27) get_the_ID() //Retrieve the ID of the current item in the WordPress Loop.
+
+28) wp_get_post_parent_id() //
+
+29) wp_get_post_parent_id(get_the_ID()); //altogether what this line of code is saying is get the id of the current we're viewing and then wordpress we want you to use that number to look up the ID of its parent page.
+    wp_get_post_parent_id(get_the_ID()); == so only if the current page has a parent do something
+
+30) The difference between these two functions is that the_title() 
+will output the title of the current post or page whereas get_the_title 
+allows you to pass an ID number in these parentheses and it will give you 
+the title for that post instead of just the current post that you've looped through 
+
+31) the_permalink && get_the_permalink 
+
+the_permalink echos out the permalink of the current post to the frontend.
+
+get_permalink however returns it as a variable, but does not echo it out. 
+You can also pass a post ID to it if you want the permalink of another post.
+
+the_.... wp will handle the echoing out for you 
+get_the.... it's not going to echo anything for uoi it's just going to return a value and it's up to you to use that.
+
+32) wp_list_pages(); //Retrieve or display a list of pages (or hierarchical post type items) in list (li) format.
+
+33) important reminder = wp_get_post_parent_id Returns (int|false) Post parent ID, otherwise false. Also if the condition is primitive data type is 0 that means its false, if its any number is true, furtheremore, if you are viewing a parent page the value would be false.
+
+34) wp_list_pages(array('title_li' => NULL,)); // gets rid of the title which by done by using the NULL value 
+
+35) wp_list_pages(array('child_of' => 23,)); //when parent get child of //(int) Display only the sub-pages of a single page by ID. Default 0 (all pages).
+
+36) echo get_the_title(wp_get_post_parent_id(get_the_ID())) get_the etc // so if get_the_... has a digit it will return the page its on if it's false it wont change/show and because im echoing it thats why it's showing
+
+37) get_pages(array/string) // Retrieve a list of pages (or hierarchical post type items). so we can use this to find out if a page has children. Also get_pages is similar to wp_list_pages 
+
+38) <html <?php language_attributes(); ?>>
+
+39) <meta charset="<?php bloginfo('charset'); ?>">
+
+40) <body <?php body_class(); ?>> 
+
+DYNAMIC WP MENUS 
+
+41) functions.php > register_nav_menu('headerMenuLocation' , 'Header Menu Dashboard');
+                    register_nav_menu('footerLocationOne' , 'Footer One Dashboard'); 
+
+42) header.php >  wp_nav_menu(array('theme_location' => 'headerMenuLocation'));
+
+43) footer.php > wp_nav_menu(array('theme_location' => 'footerLocationOne' ));
+   
+44) remember!!! that alot of functions have added css classes to them 
+
+45) class="current-menu-item"  wordpress class???
+
+46) is_page('linkName')
+  example use = if (is_page('about-us') or wp_get_post_parent_id(0) == 16)
+
+BLOG SECTION ===================
+
+47)    #while(have_posts()) = keep looping as long as the following is true have posts 
+      while(have_posts()) {
+       #always start with the function named the_post() because that will get the appropriate data ready for each post 
+        the_post(); 
+      }
+
+48) the_excerpt(); //part of the website 
+
+49) the_time('n.j.y');
+
+50) echo get_the_category_list(', '); //making space done inside the parenthesis
+
+51) paginate_links();
+
+52) the_author_posts_link();
+        
+53) single.php - individual have_posts very similar to
+    page.php - individual pages 
+
+ARCHIVES.PHP IS FOR CATEGORY, AUTHOR, DATE, ETC ===============
+
+54) is_category();
+
+55) the_archive_title(); //same as above all rounder 
+
+56) the_archive_description(); 
+
+57) category > edit category // to be able to change the desciption of posts 
+
+WP Query ========================
+
+control what is fed into "The loop." loop through any posts at any time, in any theme file. 
+
+Basically configuring the "the loop"
+
+the_post() is $wp_query->the_post()
+and 
+have_post() is $wp_query->have_posts()
+
+normally we have zero control over which posts are being looped through by default 
+the url or permalink that you are currently viewing on the website determines which
+posts get looped through
+
+-> meaning in php"
+
+meaning 1) 
+Call a function: $foo->bar();
+Access a property: $foo->bar = 'baz';
+
+meaning 2) It is used when referring to the attributes of an instantiated object
+
+"$configPosts->have_posts();"
+example above disictate 
+$configuredPosts = will be object name 
+-> = object operator symbol ???
+accessing have_posts(); the_post();
+
+$configPosts = new WP_Query('cat=7&posts_per_page=2&orderby=title&order=ASC'); // two actions in one 
+
+WP_Query('') tags: 
+orderby' => 'rand' or orderby=title 
+posts_per_page => 2 or posts_per_page=2
+cat=7
+category_name => 'nameOfCat'
+'post_type' => 'page' 
+'post-type' => 'post'
+   #'category_name' => 'awards',
+        #'post_type' => 'page',
+        #'post-type' => 'post'
+
+
+
+58) wp_reset_postdata(); //use at end of wp_query 
+
+59) wp_trim_words(get_the_cotent();, 18); //function inside of a function and 18 words 
+
+60) get_the_cotent(); //When used inside The Loop, this function will get the content of the current post.
+                      //If used outside The Loop, you must inform the post you want to get the content from using the optional $post parameter.
+
+61) 
+
+
+<!-- OOP PHP
+   // public is the property declaration 
+
+class Fruit {
+    // Properties
+    public $name;
+    public $color;
+  
+    // Methods
+    function set_name($name) {
+      $this->name = $name;
+    }
+    function get_name() {
+      return $this->name;
+    }
+  }
+  
+  $apple = new Fruit();
+  $banana = new Fruit();
+  $apple->set_name('Apple');
+  $banana->set_name('Banana');
+  
+  echo $apple->get_name(); //Apple
+  echo $banana->get_name(); //Banana
+
+// Create a new instance of MyObject into $obj
+$obj = new MyObject();
+// Set a property in the $obj object called thisProperty
+$obj->thisProperty = 'Fred';
+// Call a method of the $obj object named getProperty
+$obj->getProperty();
+
+  ALWAYS ADD ECHO !!!!!!!!!!
+
+if (is_home())
+if (is_single())
+if (is_archive())
+
+if (get_post_type() == 'post') //used for to check if post type is post instead of using is_archive() etc 
+
+WP_Query() is a class that wp provides for us and it is the blueprint. It's going to do all of the heavy liftinh for us within the parentheses. We just tell the class what data we want to query from the database. the class will do its things and then we will this variable/object that will contain everything we need.
+
+
+

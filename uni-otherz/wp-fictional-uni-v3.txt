@@ -1,0 +1,200 @@
+1) I put the banner html content into function inside of functions.php and call it where ever needed 
+
+2) adding arguements when calling a function for example pageBanner() create an assiative array 
+
+putting event loop content in a fucntion to be re used. 
+
+3) get_template_part('file directory for slug', optional second arguement NULL is defualt ) 
+get_template_part('template-parts/content', 'event'); so file added would be = template-parts folder > content-event.php
+
+4) get_template_part('template-parts/content', get_post_type) // more dynimic way of working so for example could be used for a search results screen and each page/post type will be in its own file type -programs etc 
+
+5) get_template_part('template-parts/content-event'); if no function is used 
+
+adding google maps in google cloud platform issue's
+6) to solve error inspect the issue on the console then add any neccassary apis for example geolocation api then inside of credentials change the api restrictions to restrict key to the apis 
+
+7) get_post_type_archive_link('campus'); //will link to the archive of the campuses 
+
+8) inside the loop post in archive-campus.php and single-campus.php
+
+ $mapLocation = get_field('map_location_')
+    <div class="marker" data-lat="<?php echo $mapLocation['lat']; ?>" data-lng="<?php echo $mapLocation['lng']; ?>">
+      <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+      <?php echo $mapLocation['address']; ?>
+
+
+
+9) relationship between a single-program.page and campuses 
+    
+     #getting campus details if there is any, there is no need for to use custom query because it's not a native type post we can just look at the value straight from the custom field plugin that has any relationship with the current post. aka directley related to the custom_fields plugin and not anything else 
+       $relatedCampuses = get_field('related_campus');
+
+       if ($relatedCampuses) {
+        echo '<h2 class="headline">' . get_the_title() . ' is Available At These Campuses: </h2>'; #title of program 
+
+        echo '<ul class="min-list link-list">';
+        foreach($relatedCampuses as $campus) {
+          ?> 
+          <li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus); ?> </a></li>
+       <?php  } // end of for each 
+       echo '</ul>';      
+       } //end of condition 
+
+10)  inside of functions.php >
+ if (!is_admin() && is_post_type_archive('campus') && $query->is_main_query()) {
+    $query->set('posts_per_page', -1); 
+}
+
+//#just to make sure there is no limit to the archive-campus.php map amount
+
+11) Search.js for footer search box set up 
+
+Wordpress Rest API with AJAX 
+
+12) /wp-json/wp/v2/pages // raw data for the 10 most recent pages 
+
+13) /wp-json/wp/v2/posts // raw data for the 10 most recent blog posts on our website 
+
+14) /wp-json/wp/v2/posts?per_page=2 // json for 2 posts 
+
+15) /wp-json/wp/v2/posts/7 // specific post 
+
+16) /wp-json/wp/v2/posts?search=award // to search 
+
+17) add adove to api in js by = $.getJSON('http://localhost:8888/fictional-university/wp-json/wp/v2/posts?search=' + this.searchField.val(), function(posts) {
+        alert(posts[0].title.rendered);
+}
+
+
+18) the WP REST API makes it possible to work with wp using languages other than php
+
+19) all modern programming languages can send http requests and interpret json data 
+
+20) the WP REST API makes it possible to work with wp using languages other php like java so could be able to create IOS apps that communicate with a wp website through the rest api or could create a python or node.js that communicates with wp.
+
+21) js old school way of doing things
+console.log(
+          '<h2> General Information </h2>\
+          <ul>\
+          <li> </li>\
+          </ul>');
+
+22) map results from the complex search class
+
+23) functions.php > 
+
+//so this is a wordpress function that will let us output a little bit of javascript data into the HTML source of web page, within the parentheses this function takes three arguements
+    //first arguement we want to include the name or handfle of our main js file that you want to make flexible the main handle here is main-university-js
+    //second arguement we just want to make up a variable name for the html 
+    //third argument we just create an array of data that we want to be in javascript 
+    //get_site_url() will return the URL for the current wp installation 
+
+    wp_localize_script('main-university-js', 'universityData' , array(
+      'root_url' => get_site_url()
+ 
+then add to Search.js AJAX > 
+
+$.getJSON( universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), posts => {content}
+
+24) 
+Categories	/wp/v2/categories
+Tags	/wp/v2/tags
+Pages	/wp/v2/pages
+Comments	/wp/v2/comments
+Taxonomies	/wp/v2/taxonomies
+Media	/wp/v2/media
+Users	/wp/v2/users
+Post Types	/wp/v2/types
+Post Statuses	/wp/v2/statuses
+Settings	/wp/v2/settings
+
+25) Search.js added multiple json results the posts/pages http request 
+
+add new json aka add new custom field ?? 
+
+26) functions.php > to change the json data aka wp rest api custom field 
+
+ function uniCustomRest() {
+     register_rest_field('post' , 'author-name' , array (
+        'get_callback' => function() {return get_the_author();}
+     ));
+     // you can create as many register_rest_field() {} you want
+   }
+
+add_action('rest_api_init', 'uniCustomRest');
+
+
+27) you can retrieve the info from above function then return that value into json to then be used on javascript oop style 
+
+28) ${combinedResults.map(item => `<li><a href="${item.link}">${item.title.rendered}</a> ${item.type == 'post' ? `by ${item.authorName}` : ''} </li>`).join('')} template literal within a template literal 
+
+new custom route url 
+
+29) mu-plguins > 'show_in_rest' => true, url for professor search localhost:8888/fictional-university/wp-json/wp/v2/professor?search=
+
+30) 3 reasons why to create your own new rest api url 
+    1) custom search logic 
+    2) respond with less json data (load faster for visitors)
+    3) send only 1 getJSON reuest inead of 6 in my js 
+
+31) just to stay organised = require get_thme_file_path('/inc/search-route.php');
+
+32) to actually create a route 
+
+33) inside of search-route.php WP_Query named $programRelationshipQuery
+
+as before on single-program.php to get the relationship between programs and professors also events on the search this time.
+
+34) search-route.php > 
+
+// programs to find a relationship with =======================================
+// array(array()) the reason we do this is because wp lets you string together multiple filters meaning you could have multiple inner arays each one being a filter and they're nested within the outer array.
+// Basically meta_query parameter of WP_Query allows you to search WordPress posts / pages / custom post types by their meta data and sort the result.
+// meta data means a set of data that describes and gives information about other data.
+// so this query is saying/was saying give us any prossors where one of the related programs is biology
+$programRelationshipQuery = new WP_Query( array(
+    'post_type' => 'professor',
+    'meta_query' => array ( 
+    'relation' => 'OR', // relation or pick one array not all relation and picks all
+        array(
+             'key' => 'related_programs', //customfield name with the programs biology/math/english
+             'compare' => 'LIKE', // in this case we are looking for an exact match nor are we comparing actual numbers we are actually searching for numbers disguised as strings nested inside an array
+             'value' => '87' // 87 is biology if only set to 87 than only proffersers with a custom field of biology would be shown // looking for value  
+            
+            )
+   )
+));
+
+while ($programRelationshipQuery->have_posts()) {
+    $programRelationshipQuery->the_post();
+
+
+    if(get_post_type() == 'professor' ) {
+        array_push($results['professors'], array(
+            'title' => get_the_title(),
+            'permalink' => get_the_permalink(),
+            'image' => get_the_post_thumbnail_url(0, 'professorLandscape')
+            // 2 arguements 1) 0 is wp code for saying that the current post 2) size of image look in php and dashboard
+        ));
+        } 
+}
+
+//remove dublicates 
+//The array_unique() function removes duplicate values from an array. If two or more array values are the same, the first appearance will be kept and the other will be removed. 
+//Syntax array_unique(Specifying an array, sorttype)
+//array_values() Return all the values of an array (not the keys) just removes the numbers infront 
+
+
+$results['professors'] = array_values(array_unique($results['professors'], SORT_REGULAR));
+
+
+// above has been put in a if statement and the programs arrays have been filtered into a foreach 
+
+35) to avoid the search/api to look at words in the content field 
+custom fields > make new field then add wyyeuey editor then change single-program.php the_field('main_body_content');
+
+36) adding events just add just the content to the while loop and add it to the wp query 
+
+37) adding campuses 
+ if someone searches for math that's obviously going to pull in the main program post of math and within that same exact post we've alrerady got direct access to any campus's that it's related to. 
